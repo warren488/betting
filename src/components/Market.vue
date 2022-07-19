@@ -1,12 +1,20 @@
 <template>
-  <li>
-    <span>{{ market.name }}</span>
+  <li class="market">
+    <span
+      >{{ market.name }}
+      <button @click="loadOutcomes(market.outcomes)">
+        show outcomes
+      </button></span
+    >
     <ul v-if="outcomes && outcomes.length">
       <li
         style="display: flex"
-        v-for="outcome of outcomes.filter(
-          ({ marketId }) => marketId === market.marketId
-        )"
+        v-for="outcome of outcomes
+          .filter(
+            ({ marketId }) =>
+              marketId === market.marketId && outcome.status.displayable
+          )
+          .sort((a, b) => a.displayOrder - b.displayOrder)"
         :key="outcome.outcomeId"
       >
         {{ outcome.name }}:
@@ -21,12 +29,15 @@
 </template>
 
 <script>
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
 import Odds from "./Odds.vue";
 export default {
   name: "Markets-Component",
   props: ["market"],
   components: { Odds },
+  methods: {
+    ...mapActions(["loadOutcomes"]),
+  },
   computed: {
     ...mapState(["outcomes"]),
   },
@@ -36,4 +47,8 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.market {
+  padding: 0.5rem;
+}
+</style>
