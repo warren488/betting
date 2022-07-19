@@ -3,12 +3,15 @@
     <h2>{{ currentEvent.name }}</h2>
     <ul>
       <Market
-        v-for="market of liveMarkets.filter(
-          (market) => market.eventId === currentEvent.eventId
-        )"
+        v-for="market of liveMarkets
+          .filter(
+            (market) =>
+              market.eventId === currentEvent.eventId &&
+              market.status.displayable
+          )
+          .sort((a, b) => a.displayOrder - b.displayOrder)"
         :market="market"
         :key="market.marketId"
-        @click="loadOutcomes(market.outcomes)"
       />
     </ul>
   </div>
@@ -35,7 +38,7 @@ export default {
     currentEvent() {
       this.currentEvent &&
         this.currentEvent.markets.forEach((marketId) =>
-          this.loadMarket({ marketId })
+          this.loadMarket({ marketId, subscribe: true })
         );
     },
   },
