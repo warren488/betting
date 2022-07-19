@@ -11,8 +11,8 @@
         style="display: flex"
         v-for="outcome of outcomes
           .filter(
-            ({ marketId }) =>
-              marketId === market.marketId && outcome.status.displayable
+            ({ marketId, status: { displayable } }) =>
+              marketId === market.marketId && displayable
           )
           .sort((a, b) => a.displayOrder - b.displayOrder)"
         :key="outcome.outcomeId"
