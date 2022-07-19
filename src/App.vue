@@ -12,7 +12,27 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
-  color: #2c3e50;
+  color: var(--primary);
+}
+
+:root {
+  --primary: #2c3e50;
+}
+
+li {
+  list-style: none;
+}
+ul {
+  padding: 0px;
+}
+
+button {
+  color: white;
+  background-color: var(--primary);
+  border: none;
+  border-radius: 0.25rem;
+  padding: 0.25rem;
+  cursor: pointer;
 }
 
 nav {
@@ -20,7 +40,7 @@ nav {
 
   a {
     font-weight: bold;
-    color: #2c3e50;
+    color: var(--primary);
 
     &.router-link-exact-active {
       color: #42b983;
