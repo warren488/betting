@@ -2,11 +2,31 @@
   <div class="home">
     <h1>Live Events</h1>
     <ul>
-      <li v-for="event in liveEvents" :key="event.eventId">
-        {{ event.name }}
-        <p @click="() => setMarketsVisible(event.eventId)">see more...</p>
-        <div v-if="visibleMarkets.includes(event.eventId)">
-          {{ event.markets }}
+      <li
+        v-for="liveEvent in liveEvents"
+        :key="liveEvent.eventId"
+        style="padding-bottom: 1rem; border-bottom: solid thin"
+      >
+        <span v-on:click="$router.push('/event/' + liveEvent.eventId)">
+          {{ liveEvent.name }}
+        </span>
+        <p @click="() => setMarketsVisible(liveEvent)">
+          {{
+            visibleMarkets.includes(liveEvent.eventId)
+              ? "Hide..."
+              : "see more..."
+          }}
+        </p>
+        <div v-if="visibleMarkets.includes(liveEvent.eventId)">
+          <ul>
+            <Market
+              v-for="market of liveMarkets.filter(
+                (market) => market.eventId === liveEvent.eventId
+              )"
+              :market="market"
+              :key="market.marketId"
+            />
+          </ul>
         </div>
       </li>
     </ul>
@@ -15,7 +35,9 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { mapState } from "vuex";
+import { mapActions, mapState } from "vuex";
+import Odds from "@/components/Odds.vue";
+import Market from "../components/Market.vue";
 
 export default defineComponent({
   name: "HomeView",
@@ -25,24 +47,34 @@ export default defineComponent({
     };
   },
   methods: {
-    setMarketsVisible(id: string) {
-      console.log(id);
-      if (this.visibleMarkets.includes(id)) {
+    ...mapActions(["loadMarket"]),
+    setMarketsVisible(event: { eventId: string; markets: string[] }) {
+      const { eventId, markets } = event;
+      console.log(event);
+      if (this.visibleMarkets.includes(eventId)) {
         this.visibleMarkets = this.visibleMarkets.filter(
-          (arrId: string) => arrId !== id
+          (arrId: string) => arrId !== eventId
         );
       } else {
-        this.visibleMarkets.push(id);
+        markets.forEach(this.loadMarket);
+        this.visibleMarkets.push(eventId);
       }
     },
   },
   computed: {
-    ...mapState(["liveEvents"]),
+    ...mapState(["liveEvents", "liveMarkets", "outcomes"]),
   },
+  components: { Odds, Market },
 });
 </script>
 
 <style lang="scss" scoped>
+ul {
+  padding: 0px;
+}
+li {
+  list-style: none;
+}
 p {
   margin: 0px;
 }
