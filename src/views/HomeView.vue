@@ -56,7 +56,7 @@ export default defineComponent({
           (arrId: string) => arrId !== eventId
         );
       } else {
-        markets.forEach(this.loadMarket);
+        markets.forEach((marketId) => this.loadMarket({ marketId }));
         this.visibleMarkets.push(eventId);
       }
     },
