@@ -12,11 +12,7 @@ import { defineComponent } from "vue";
 
 export default defineComponent({
   name: "Odd-Component",
-  props: {
-    den: Number,
-    num: Number,
-    decimal: Number,
-  },
+  props: ["den", "num", "decimal"],
   data() {
     return {
       decimalView: false,

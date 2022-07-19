@@ -2,11 +2,11 @@
   <li class="market">
     <span
       >{{ market.name }}
-      <button @click="loadOutcomes(market.outcomes)">
-        show outcomes
+      <button @click="toggleOutcomes">
+        {{ this.hideOutcomes ? "show outcomes" : "hide outcomes" }}
       </button></span
     >
-    <ul v-if="outcomes && outcomes.length">
+    <ul v-if="outcomes && outcomes.length > 0 && !this.hideOutcomes">
       <li
         style="display: flex"
         v-for="outcome of outcomes
@@ -33,16 +33,27 @@ import { mapActions, mapState } from "vuex";
 import Odds from "./Odds.vue";
 export default {
   name: "Markets-Component",
-  props: ["market"],
+  props: ["market", "showOutcomes"],
   components: { Odds },
+  data() {
+    return { hideOutcomes: false };
+  },
   methods: {
     ...mapActions(["loadOutcomes"]),
+    toggleOutcomes() {
+      this.hideOutcomes = !this.hideOutcomes;
+      if (this.hideOutcomes) this.loadOutcomes(this.market.outcomes);
+    },
   },
   computed: {
     ...mapState(["outcomes"]),
   },
   mounted() {
-    console.log(this.market);
+    if (this.showOutcomes) {
+      this.loadOutcomes(this.market.outcomes);
+      // internally manage showing and hiding of outcomes
+    }
+    this.hideOutcomes = !this.showOutcomes;
   },
 };
 </script>

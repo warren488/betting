@@ -3,7 +3,8 @@
     <h2>{{ currentEvent.name }}</h2>
     <ul>
       <Market
-        v-for="market of liveMarkets
+        v-for="(market, index) of liveMarkets
+          // we only want markets for this event that are displayable
           .filter(
             (market) =>
               market.eventId === currentEvent.eventId &&
@@ -12,6 +13,7 @@
           .sort((a, b) => a.displayOrder - b.displayOrder)"
         :market="market"
         :key="market.marketId"
+        :showOutcomes="index < 10"
       />
     </ul>
   </div>
@@ -29,17 +31,19 @@ export default {
     // ideally we shoulda wait for it to be loaded
   },
   methods: {
-    ...mapActions(["loadCurrentEvent", "loadMarket", "loadOutcomes"]),
+    ...mapActions([
+      "loadCurrentEvent",
+      "loadMarket",
+      "loadOutcomes",
+      "loadMarkets",
+    ]),
   },
   computed: {
     ...mapState(["currentEvent", "liveMarkets"]),
   },
   watch: {
     currentEvent() {
-      this.currentEvent &&
-        this.currentEvent.markets.forEach((marketId) =>
-          this.loadMarket({ marketId, subscribe: true })
-        );
+      this.currentEvent && this.loadMarkets(this.currentEvent.markets);
     },
   },
 };
