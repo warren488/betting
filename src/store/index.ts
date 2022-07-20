@@ -18,7 +18,11 @@ export default createStore({
     loadedEvents: false,
   }),
   getters: {},
-  mutations: {},
+  mutations: {
+    clearCurrentEvent(state) {
+      state.currentEvent = null;
+    },
+  },
   actions: {
     /** loads an event into its own object for the event page, also makes it easier to subscribe to changes */
     async loadCurrentEvent(context, eventId) {

@@ -30,9 +30,13 @@ export default {
     this.loadCurrentEvent(this.$route.params.id);
     // ideally we shoulda wait for it to be loaded
   },
+  unmounted() {
+    this.clearCurrentEvent();
+  },
   methods: {
     ...mapActions([
       "loadCurrentEvent",
+      "clearCurrentEvent",
       "loadMarket",
       "loadOutcomes",
       "loadMarkets",
