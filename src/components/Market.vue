@@ -8,12 +8,7 @@
     </h3>
     <ul v-if="outcomes && outcomes.length > 0 && !this.hideOutcomes">
       <li
-        v-for="outcome of outcomes
-          .filter(
-            ({ marketId, status: { displayable } }) =>
-              marketId === market.marketId && displayable
-          )
-          .sort((a, b) => a.displayOrder - b.displayOrder)"
+        v-for="outcome of marketOutcomes"
         :key="outcome.outcomeId"
         class="outcome"
       >
@@ -44,12 +39,21 @@ export default {
   methods: {
     ...mapActions(["loadOutcomes"]),
     toggleOutcomes() {
-      if (!this.hideOutcomes) this.loadOutcomes(this.market.outcomes);
+      // if hide outcomes is true this means we are about to toggle it and show them and should load them as well
+      if (this.hideOutcomes) this.loadOutcomes(this.market.outcomes);
       this.hideOutcomes = !this.hideOutcomes;
     },
   },
   computed: {
     ...mapState(["outcomes"]),
+    marketOutcomes() {
+      return this.outcomes
+        .filter(
+          ({ marketId, status: { displayable } }) =>
+            marketId === this.market.marketId && displayable
+        )
+        .sort((a, b) => a.displayOrder - b.displayOrder);
+    },
   },
   mounted() {
     if (this.showOutcomes) {

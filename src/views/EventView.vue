@@ -3,14 +3,7 @@
     <h2>{{ currentEvent.name }}</h2>
     <ul>
       <Market
-        v-for="(market, index) of liveMarkets
-          // we only want markets for this event that are displayable
-          .filter(
-            (market) =>
-              market.eventId === currentEvent.eventId &&
-              market.status.displayable
-          )
-          .sort((a, b) => a.displayOrder - b.displayOrder)"
+        v-for="(market, index) of eventMarkets"
         :market="market"
         :key="market.marketId"
         :showOutcomes="index < 10"
@@ -44,6 +37,18 @@ export default {
   },
   computed: {
     ...mapState(["currentEvent", "liveMarkets"]),
+    eventMarkets() {
+      return (
+        this.liveMarkets
+          // we only want markets for this event that are displayable
+          .filter(
+            (market) =>
+              market.eventId === this.currentEvent.eventId &&
+              market.status.displayable
+          )
+          .sort((a, b) => a.displayOrder - b.displayOrder)
+      );
+    },
   },
   watch: {
     currentEvent() {
