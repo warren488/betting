@@ -5,26 +5,33 @@
       <li
         v-for="liveEvent in liveEvents"
         :key="liveEvent.eventId"
-        style="padding-bottom: 1rem; border-bottom: solid thin"
+        class="live-event"
       >
-        <span v-on:click="$router.push('/event/' + liveEvent.eventId)">
+        <h2
+          class="live-event__heading"
+          v-on:click="$router.push('/event/' + liveEvent.eventId)"
+        >
           {{ liveEvent.name }}
-        </span>
+        </h2>
         <p @click="() => setMarketsVisible(liveEvent)">
           {{
             visibleMarkets.includes(liveEvent.eventId)
-              ? "Hide..."
-              : "see more..."
+              ? "Hide primary markets..."
+              : "See primary markets..."
           }}
         </p>
         <div v-if="visibleMarkets.includes(liveEvent.eventId)">
-          <ul>
+          <ul class="live-event__primary-markets">
             <Market
               v-for="market of liveMarkets.filter(
-                (market) => market.eventId === liveEvent.eventId
+                (market) =>
+                  market.eventId === liveEvent.eventId &&
+                  // make sure we only render the primary markets on the home screen
+                  liveEvent.markets.includes(market.marketId)
               )"
               :market="market"
               :key="market.marketId"
+              :showOutcomes="true"
             />
           </ul>
         </div>
@@ -69,13 +76,18 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-ul {
-  padding: 0px;
+.live-event {
+  margin-bottom: 1rem;
+  border-bottom: solid thin;
 }
-li {
-  list-style: none;
-}
-p {
+
+.live-event__heading {
   margin: 0px;
+  cursor: pointer;
+}
+
+.live-event__primary-markets {
+  display: flex;
+  justify-content: center;
 }
 </style>

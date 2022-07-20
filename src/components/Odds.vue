@@ -1,8 +1,10 @@
 <template>
   <div class="odds">
-    <div>{{ decimalView ? decimal : `${num}/${den}` }}</div>
+    <div class="price">
+      {{ decimalView ? decimal : `${num}/${den}` }}
+    </div>
     <button @click="decimalView = !decimalView">
-      {{ decimalView ? "fract" : "decimal" }}
+      {{ decimalView ? "fraction" : "decimal" }}
     </button>
   </div>
 </template>
@@ -25,5 +27,14 @@ export default defineComponent({
 <style scoped lang="scss">
 .odds {
   display: flex;
+}
+
+.price {
+  display: flex;
+  align-items: center;
+}
+
+button {
+  margin-left: 0.25rem;
 }
 </style>

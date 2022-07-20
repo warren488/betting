@@ -1,14 +1,13 @@
 <template>
   <li class="market">
-    <span
-      >{{ market.name }}
+    <h3 class="market__heading">
+      {{ market.name }}
       <button @click="toggleOutcomes">
         {{ this.hideOutcomes ? "show outcomes" : "hide outcomes" }}
-      </button></span
-    >
+      </button>
+    </h3>
     <ul v-if="outcomes && outcomes.length > 0 && !this.hideOutcomes">
       <li
-        style="display: flex"
         v-for="outcome of outcomes
           .filter(
             ({ marketId, status: { displayable } }) =>
@@ -16,13 +15,17 @@
           )
           .sort((a, b) => a.displayOrder - b.displayOrder)"
         :key="outcome.outcomeId"
+        class="outcome"
       >
-        {{ outcome.name }}:
-        <Odds
-          :den="outcome.price.den"
-          :num="outcome.price.num"
-          :decimal="outcome.price.decimal"
-        />
+        <span class="outcome__active" v-if="!outcome.status.suspended">
+          {{ outcome.name }}
+          <Odds
+            :den="outcome.price.den"
+            :num="outcome.price.num"
+            :decimal="outcome.price.decimal"
+          />
+        </span>
+        <span v-if="outcome.status.suspended"> suspended </span>
       </li>
     </ul>
   </li>
@@ -41,8 +44,8 @@ export default {
   methods: {
     ...mapActions(["loadOutcomes"]),
     toggleOutcomes() {
+      if (!this.hideOutcomes) this.loadOutcomes(this.market.outcomes);
       this.hideOutcomes = !this.hideOutcomes;
-      if (this.hideOutcomes) this.loadOutcomes(this.market.outcomes);
     },
   },
   computed: {
@@ -51,8 +54,8 @@ export default {
   mounted() {
     if (this.showOutcomes) {
       this.loadOutcomes(this.market.outcomes);
-      // internally manage showing and hiding of outcomes
     }
+    // internally manage showing and hiding of outcomes
     this.hideOutcomes = !this.showOutcomes;
   },
 };
@@ -60,6 +63,21 @@ export default {
 
 <style>
 .market {
-  padding: 0.5rem;
+  margin-bottom: 2rem;
+}
+
+.market__heading {
+  margin: 0.25rem;
+}
+.outcome__active {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-left: 0.25rem;
+}
+.outcome {
+  margin-bottom: 0.25rem;
+  border: solid thin;
+  border-radius: 0.25rem;
 }
 </style>
