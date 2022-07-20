@@ -1,5 +1,5 @@
 <template>
-  <li class="market">
+  <li class="market" :class="{ 'market--open': !hideOutcomes }">
     <h3 class="market__heading">
       {{ market.name }}
       <button @click="toggleOutcomes">
@@ -65,9 +65,12 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
 .market {
-  margin-bottom: 2rem;
+  margin-bottom: 0.5rem;
+  &--open {
+    margin-bottom: 2rem;
+  }
 }
 
 .market__heading {

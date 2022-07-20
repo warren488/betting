@@ -1,6 +1,7 @@
 <template>
   <div v-if="currentEvent">
     <h2>{{ currentEvent.name }}</h2>
+    <h3 style="margin: 0px">{{ currentEvent.linkedEventTypeName }}</h3>
     <ul>
       <Market
         v-for="(market, index) of eventMarkets"
